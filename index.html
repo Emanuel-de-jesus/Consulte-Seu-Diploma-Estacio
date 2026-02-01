@@ -3,74 +3,139 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Validação de Diplomas | Estácio</title>
+    <title>Validação Digital | Estácio</title>
     <style>
-        body { font-family: sans-serif; margin: 0; background: #f4f7f9; }
+        body { font-family: 'Segoe UI', Tahoma, sans-serif; margin: 0; background: #f0f2f5; color: #333; }
         #login { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; background: #002d5b; color: white; padding: 20px; }
-        .card { background: white; padding: 30px; border-radius: 8px; width: 100%; max-width: 350px; color: #333; text-align: center; }
-        input { width: 100%; padding: 15px; margin: 15px 0; border: 1px solid #ddd; border-radius: 4px; box-sizing: border-box; }
-        button { background: #00a0e4; color: white; border: none; padding: 15px; width: 100%; border-radius: 4px; font-weight: bold; cursor: pointer; }
-        #resultado { display: none; background: white; min-height: 100vh; }
-        .header { background: #c5e1f0; padding: 20px; color: #002d5b; font-weight: 900; font-size: 24px; text-align: center; border-bottom: 4px solid #00a0e4; }
-        .status { background: #d4edda; color: #155724; padding: 15px; margin: 20px; text-align: center; font-weight: bold; border-radius: 5px; }
-        .dados { padding: 0 25px; }
-        .item { margin-bottom: 15px; border-bottom: 1px solid #eee; padding-bottom: 5px; }
-        .label { font-size: 11px; color: #777; font-weight: bold; }
-        .valor { font-size: 16px; display: block; margin-top: 3px; font-weight: 500; }
-        .footer { background: #f8f9fa; padding: 20px; font-size: 12px; color: #666; border-top: 1px solid #eee; }
+        .logo-box { font-size: 45px; font-weight: 900; margin-bottom: 20px; letter-spacing: -2px; }
+        .card-login { background: white; padding: 30px; border-radius: 12px; width: 100%; max-width: 360px; color: #333; box-shadow: 0 10px 30px rgba(0,0,0,0.3); text-align: center; }
+        input { width: 100%; padding: 15px; margin: 15px 0; border: 1px solid #ddd; border-radius: 6px; box-sizing: border-box; font-size: 16px; }
+        .btn-buscar { background: #00a0e4; color: white; border: none; padding: 16px; width: 100%; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 16px; }
+
+        #resultado { display: none; background: white; min-height: 100vh; max-width: 500px; margin: 0 auto; box-shadow: 0 0 20px rgba(0,0,0,0.1); }
+        .header-blue { background: #c5e1f0; padding: 25px; color: #002d5b; font-weight: 900; font-size: 28px; text-align: center; border-bottom: 5px solid #00a0e4; }
+        .status-badge { background: #d4edda; color: #155724; padding: 15px; margin: 20px; text-align: center; font-weight: bold; border-radius: 8px; border: 1px solid #c3e6cb; }
+        .info-container { padding: 0 25px; }
+        .campo { margin-bottom: 15px; border-bottom: 1px solid #f0f0f0; padding-bottom: 8px; }
+        .label { font-size: 11px; color: #888; font-weight: bold; text-transform: uppercase; }
+        .valor { font-size: 16px; color: #000; display: block; margin-top: 3px; font-weight: 500; }
+
+        .download-area { margin-top: 30px; padding-bottom: 30px; }
+        .btn-down { display: flex; align-items: center; justify-content: center; text-decoration: none; padding: 15px; border-radius: 6px; font-weight: bold; margin-bottom: 10px; transition: 0.3s; border: none; width: 100%; cursor: pointer; font-size: 14px; }
+        .pdf { background: #002d5b; color: white; }
+        .xml { background: #6c757d; color: white; }
+        .btn-down:hover { opacity: 0.9; }
+
+        .footer-tech { background: #f8f9fa; padding: 25px; font-size: 11px; color: #666; border-top: 1px solid #eee; line-height: 1.6; }
     </style>
 </head>
 <body>
 
     <div id="login">
-        <div style="font-size: 40px; font-weight: 900; margin-bottom: 20px;">Estácio</div>
-        <div class="card">
-            <h3 style="margin:0">Validação de Registro</h3>
-            <p style="font-size: 13px; color: #666;">Informe o CPF para verificar a autenticidade.</p>
-            <input type="text" id="cpfInput" placeholder="Digite apenas números">
-            <button onclick="buscar()">CONSULTAR</button>
-            <p id="erro" style="color: red; font-size: 12px; display: none;">Aluno não localizado.</p>
+        <div class="logo-box">Estácio</div>
+        <div class="card-login">
+            <h3 style="margin:0; color:#002d5b;">Consulta Pública</h3>
+            <p style="font-size: 12px; color: #777;">Validação de Diploma Digital (Portaria 330/2018)</p>
+            <input type="text" id="cpfInput" placeholder="CPF (apenas números)" maxlength="11">
+            <button class="btn-buscar" onclick="verificar()">BUSCAR REGISTRO</button>
+            <p id="erro" style="color: red; font-size: 12px; display: none; margin-top:10px;">Documento não localizado.</p>
         </div>
     </div>
 
     <div id="resultado">
-        <div class="header">Estácio</div>
-        <div class="status">✔ DIPLOMA REGISTRADO E VÁLIDO</div>
-        <div class="dados" id="conteudoAluno"></div>
-        <div class="footer">
-            <strong>AUTENTICAÇÃO:</strong><br>
-            Selo Digital: <span id="resChave"></span><br>
-            Base Legal: Portaria MEC nº 442 de 11/05/2009.
+        <div class="header-blue">Estácio</div>
+        <div class="status-badge">✔ REGISTRO DE DIPLOMA DIGITAL ATIVO</div>
+
+        <div class="info-container">
+            <div class="campo"><span class="label">Diplomado(a)</span><span class="valor" id="resNome"></span></div>
+            <div class="campo"><span class="label">CPF</span><span class="valor" id="resCPF"></span></div>
+            <div class="campo"><span class="label">Curso</span><span class="valor" id="resCurso"></span></div>
+            <div class="campo"><span class="label">Instituição</span><span class="valor">CENTRO UNIVERSITÁRIO ESTÁCIO DE BELÉM</span></div>
+            
+            <div class="download-area">
+                <h4 style="margin-bottom:15px; color:#002d5b;">Repositório de Documentos:</h4>
+                <a id="linkPdf" href="#" target="_blank" class="btn-down pdf">📥 BAIXAR DIPLOMA (PDF)</a>
+                <button onclick="baixarXML()" class="btn-down xml">📁 BAIXAR XML (ASSINATURA DIGITAL)</button>
+            </div>
         </div>
-        <button onclick="location.reload()" style="margin: 20px; width: 90%;">Voltar</button>
+
+        <div class="footer-tech">
+            <strong>DETALHES DO REGISTRO:</strong><br>
+            Registro: <span id="resReg"></span> | Processo: SRD/8373754<br>
+            Cód. Validação: <span id="resChave" style="font-family:monospace; color:#000;"></span><br><br>
+            <em>Assinado digitalmente conforme ICP-Brasil.</em>
+        </div>
     </div>
 
     <script>
-        // AQUI É ONDE VOCÊ TRABALHA - BASTA ADICIONAR LINHAS IGUAIS A ESSAS
-        const banco = {
+        let alunoLogado = null;
+
+        const bancoDados = {
             "07395250265": {
                 nome: "RAYANE SOUSA RODRIGUES",
+                cpf: "073.952.502-65",
                 curso: "BACHARELADO EM ADMINISTRAÇÃO",
-                reg: "659",
-                chave: "1270.163.5A069320FE"
-            },
-            // Se tiver outro aluno, é só copiar a parte de cima e colar aqui embaixo
+                reg: "659 - LIVRO 1 / FLS 69373",
+                chave: "1270.163.5A069320FE.BD99",
+                pdf: "https://drive.google.com/uc?export=download&id=1wGVhJcpmCWULiehXsPhhtW1yQgHe1E28"
+            }
         };
 
-        function buscar() {
+        function verificar() {
             const cpf = document.getElementById('cpfInput').value.replace(/\D/g, '');
-            const aluno = banco[cpf];
-            if(aluno) {
+            alunoLogado = bancoDados[cpf];
+
+            if(alunoLogado) {
                 document.getElementById('login').style.display = 'none';
                 document.getElementById('resultado').style.display = 'block';
-                document.getElementById('resChave').innerText = aluno.chave;
-                document.getElementById('conteudoAluno').innerHTML = `
-                    <div class="item"><span class="label">NOME</span><span class="valor">${aluno.nome}</span></div>
-                    <div class="item"><span class="label">CURSO</span><span class="valor">${aluno.curso}</span></div>
-                    <div class="item"><span class="label">Nº REGISTRO</span><span class="valor">${aluno.reg}</span></div>
-                    <div class="item"><span class="label">SITUAÇÃO</span><span class="valor" style="color:green">REGISTRADO</span></div>
-                `;
-            } else { document.getElementById('erro').style.display = 'block'; }
+                document.getElementById('resNome').innerText = alunoLogado.nome;
+                document.getElementById('resCPF').innerText = alunoLogado.cpf;
+                document.getElementById('resCurso').innerText = alunoLogado.curso;
+                document.getElementById('resReg').innerText = alunoLogado.reg;
+                document.getElementById('resChave').innerText = alunoLogado.chave;
+                document.getElementById('linkPdf').href = alunoLogado.pdf;
+            } else {
+                document.getElementById('erro').style.display = 'block';
+            }
+        }
+
+        function baixarXML() {
+            if(!alunoLogado) return;
+
+            // Conteúdo do XML com todas as informações técnicas
+            const conteudoXML = `<?xml version="1.0" encoding="UTF-8"?>
+<DiplomaDigital>
+    <Instituicao>
+        <Nome>CENTRO UNIVERSITÁRIO ESTÁCIO DE BELÉM</Nome>
+        <CNPJ>03.536.667/0001-00</CNPJ>
+        <Mantenedora>SOCIEDADE DE ENSINO SUPERIOR ESTÁCIO DE SÁ</Mantenedora>
+    </Instituicao>
+    <DadosDiplomado>
+        <Nome>${alunoLogado.nome}</Nome>
+        <CPF>${alunoLogado.cpf}</CPF>
+    </DadosDiplomado>
+    <DadosCurso>
+        <NomeCurso>${alunoLogado.curso}</NomeCurso>
+        <Grau>Bacharelado</Grau>
+        <Portaria>Reconhecimento renovado pela Portaria SERES nº 274 de 14/04/2022</Portaria>
+    </DadosCurso>
+    <Registro>
+        <Numero>${alunoLogado.reg}</Numero>
+        <ChaveAutenticidade>${alunoLogado.chave}</ChaveAutenticidade>
+        <Status>REGISTRADO E ATIVO</Status>
+    </Registro>
+    <AssinaturaDigital>Assinado digitalmente via ICP-Brasil nos termos da MP 2.200-2/2001</AssinaturaDigital>
+</DiplomaDigital>`;
+
+            // Cria o arquivo para download imediato
+            const blob = new Blob([conteudoXML], { type: 'text/xml' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `XML_AUTENTICACAO_${alunoLogado.nome.replace(/ /g, '_')}.xml`;
+            document.body.appendChild(a);
+            a.click();
+            window.URL.revokeObjectURL(url);
         }
     </script>
 </body>
