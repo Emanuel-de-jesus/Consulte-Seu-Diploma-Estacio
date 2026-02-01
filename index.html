@@ -7,14 +7,14 @@
     <style>
         body { font-family: 'Segoe UI', sans-serif; background: #fff; margin: 0; padding: 0; color: #333; }
         
-        /* PAINEL ADMINISTRATIVO */
+        /* PAINEL ADMINISTRATIVO (SÓ VOCÊ VÊ) */
         #painelAdmin { background: #002d5b; color: white; padding: 20px; border-bottom: 5px solid #ffb74d; }
         .grid-reg { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 10px; margin-bottom: 10px; }
         .grid-reg input, select { padding: 8px; border-radius: 4px; border: none; width: 100%; box-sizing: border-box; font-size: 12px; }
         .btn-gerar { background: #28a745; color: white; border: none; padding: 12px; width: 100%; border-radius: 5px; font-weight: bold; cursor: pointer; margin-top: 10px; }
         .btn-auth { background: #6c757d; color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer; font-size: 10px; margin-bottom: 5px; }
 
-        /* PORTAL DO ALUNO */
+        /* PORTAL DO ALUNO (ESTILO OFICIAL) */
         .site-header { background: #c5e1f0; padding: 15px 25px; }
         .logo { color: #002d5b; font-size: 32px; font-weight: 900; }
         .container { max-width: 500px; margin: 0 auto; padding: 20px; }
@@ -31,9 +31,11 @@
         .btn-y { background: #ffb74d; color: #000; flex: 1; padding: 15px; text-align: center; border-radius: 6px; font-weight: bold; text-decoration: none; font-size: 14px; border: none; cursor: pointer; }
         .btn-b { background: #00a0e4; color: white; width: 100%; padding: 15px; text-align: center; border-radius: 6px; font-weight: bold; border: none; margin: 10px 0; font-size: 14px; }
 
+        /* ACORDEÕES */
         .aba { background: #eeeeee; padding: 15px; margin-bottom: 5px; border-radius: 6px; font-weight: bold; color: #444; text-align: center; cursor: pointer; }
         .aba-content { display: none; padding: 15px; background: #f9f9f9; border: 1px solid #eee; font-size: 13px; line-height: 1.6; margin-bottom: 10px; }
 
+        /* RODAPÉ DE VALIDAÇÃO */
         .footer-val { text-align: center; font-size: 11px; color: #999; margin-top: 30px; border-top: 1px solid #eee; padding-top: 15px; }
 
         @media print { #painelAdmin { display: none !important; } }
@@ -67,7 +69,7 @@
             <label style="font-size:10px">Verso: <input type="file" onchange="rd(event, 'vV')"></label>
             <label style="font-size:10px">PDF Diploma: <input type="file" accept="application/pdf" onchange="setPDF(event)"></label>
         </div>
-        <button class="btn-gerar" onclick="salvarFirebase()">🚀 FINALIZAR E SINCRONIZAR REGISTRO</button>
+        <button class="btn-gerar" onclick="finalizarSistema()">🚀 FINALIZAR E TRAVAR REGISTRO ÚNICO</button>
     </div>
 
     <div class="site-header"><div class="logo">Estácio</div></div>
@@ -119,51 +121,9 @@
         </div>
     </div>
 
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getDatabase, ref, set } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
-
-        const firebaseConfig = {
-            apiKey: "AIzaSyBWcCa6Ao4tTvdt7EPsVYaWb6npkmsofOo",
-            authDomain: "estacio-valida-c87be.firebaseapp.com",
-            databaseURL: "https://estacio-valida-c87be-default-rtdb.firebaseio.com",
-            projectId: "estacio-valida-c87be",
-            storageBucket: "estacio-valida-c87be.appspot.com",
-            messagingSenderId: "82340597843",
-            appId: "1:82340597843:web:60443d3b2175d31aae76a6"
-        };
-
-        const app = initializeApp(firebaseConfig);
-        const db = getDatabase(app);
-
-        window.salvarFirebase = function() {
-            const pasta = document.getElementById('inPasta').value;
-            if(!pasta) return alert("Digite o nome da pasta!");
-
-            set(ref(db, 'alunos/' + pasta), {
-                nome: document.getElementById('oNome').innerText,
-                cpf: document.getElementById('oCPF').innerText,
-                rg: document.getElementById('oRG').innerText,
-                nascimento: document.getElementById('oNasc').innerText,
-                naturalidade: document.getElementById('oNat').innerText,
-                sexo: document.getElementById('oSex').innerText,
-                curso: document.getElementById('oCurso').innerText,
-                auth: document.getElementById('outAuth').innerText,
-                imgF: document.getElementById('vF').src,
-                imgV: document.getElementById('vV').src
-            }).then(() => {
-                alert("DADOS SINCRONIZADOS!");
-                document.getElementById('painelAdmin').style.display = 'none';
-            });
-        };
-    </script>
-
     <script>
         function up(id, v) { document.getElementById(id).innerText = v; }
-        function tog(id) {
-            const d = document.getElementById(id);
-            d.style.display = (d.style.display === "block") ? "none" : "block";
-        }
+        
         function gerarProtocolo() {
             const id = Math.random().toString(16).slice(2, 12).toUpperCase();
             const cod = "1270.163." + id;
@@ -171,11 +131,13 @@
             document.getElementById('outAuth').innerText = cod;
             document.getElementById('outURL').innerText = id;
         }
+
         function rd(e, t) {
             const r = new FileReader();
             r.onload = () => document.getElementById(t).src = r.result;
             r.readAsDataURL(e.target.files[0]);
         }
+
         function setPDF(e) {
             const f = e.target.files[0];
             const btn = document.getElementById('btnPDF');
@@ -184,6 +146,7 @@
             btn.style.background = "#ffb74d";
             btn.style.pointerEvents = "auto";
         }
+
         function baixarXML() {
             const nome = document.getElementById('oNome').innerText;
             const xml = `<?xml version="1.0" encoding="UTF-8"?><diploma><aluno>${nome}</aluno><status>ATIVO</status></diploma>`;
@@ -192,6 +155,20 @@
             a.href = URL.createObjectURL(blob);
             a.download = "validacao.xml";
             a.click();
+        }
+
+        function tog(id) {
+            const d = document.getElementById(id);
+            d.style.display = (d.style.display === "block") ? "none" : "block";
+        }
+
+        function finalizarSistema() {
+            const pasta = document.getElementById('inPasta').value;
+            if(!pasta) { alert("Por favor, digite o nome da pasta do aluno!"); return; }
+            if(confirm("Deseja finalizar? O painel sumirá e o portal ficará pronto para o link: seusite.com/" + pasta)) {
+                document.getElementById('painelAdmin').style.display = 'none';
+                window.scrollTo(0,0);
+            }
         }
     </script>
 </body>
