@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portal de Validação Digital | Estácio</title>
+    <style>
+        body { font-family: 'Segoe UI', sans-serif; background: #fff; margin: 0; padding: 0; color: #333; }
+        
+        /* PAINEL ADMINISTRATIVO */
+        #painelAdmin { background: #002d5b; color: white; padding: 20px; border-bottom: 5px solid #ffb74d; }
+        .grid-reg { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 10px; margin-bottom: 10px; }
+        .grid-reg input, select { padding: 8px; border-radius: 4px; border: none; width: 100%; box-sizing: border-box; font-size: 12px; }
+        .btn-gerar { background: #28a745; color: white; border: none; padding: 12px; width: 100%; border-radius: 5px; font-weight: bold; cursor: pointer; margin-top: 10px; }
+        .btn-auth { background: #6c757d; color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer; font-size: 10px; margin-bottom: 5px; }
+
+        /* PORTAL DO ALUNO */
+        .site-header { background: #c5e1f0; padding: 15px 25px; }
+        .logo { color: #002d5b; font-size: 32px; font-weight: 900; }
+        .container { max-width: 500px; margin: 0 auto; padding: 20px; }
+        
+        .aluno-header h2 { font-size: 22px; margin: 0 0 10px; text-transform: uppercase; color: #333; }
+        .info-row { display: flex; margin: 4px 0; font-size: 15px; }
+        .label { font-weight: 700; color: #666; width: 150px; flex-shrink: 0; }
+
+        .status-badge { background: #b2d8b2; padding: 12px; text-align: center; font-weight: bold; border-radius: 8px; margin: 20px 0; color: #1e4620; font-size: 17px; }
+
+        .diploma-box { border: 2px solid #385e9d; padding: 4px; margin-bottom: 10px; background: #fff; }
+        .img-doc { width: 100%; height: auto; display: block; }
+
+        .btn-y { background: #ffb74d; color: #000; flex: 1; padding: 15px; text-align: center; border-radius: 6px; font-weight: bold; text-decoration: none; font-size: 14px; border: none; cursor: pointer; }
+        .btn-b { background: #00a0e4; color: white; width: 100%; padding: 15px; text-align: center; border-radius: 6px; font-weight: bold; border: none; margin: 10px 0; font-size: 14px; }
+
+        .aba { background: #eeeeee; padding: 15px; margin-bottom: 5px; border-radius: 6px; font-weight: bold; color: #444; text-align: center; cursor: pointer; }
+        .aba-content { display: none; padding: 15px; background: #f9f9f9; border: 1px solid #eee; font-size: 13px; line-height: 1.6; margin-bottom: 10px; }
+
+        .footer-val { text-align: center; font-size: 11px; color: #999; margin-top: 30px; border-top: 1px solid #eee; padding-top: 15px; }
+
+        @media print { #painelAdmin { display: none !important; } }
+    </style>
+</head>
+<body>
+
+    <div id="painelAdmin">
+        <h3 style="margin-top:0; color:#ffb74d;">CENTRAL DE REGISTRO E HOSPEDAGEM</h3>
+        <div class="grid-reg">
+            <input type="text" placeholder="Nome do Aluno" oninput="up('oNome', this.value)">
+            <input type="text" placeholder="CPF" oninput="up('oCPF', this.value)">
+            <input type="text" placeholder="RG" oninput="up('oRG', this.value)">
+            <input type="text" placeholder="Nascimento" oninput="up('oNasc', this.value)">
+            <input type="text" placeholder="Naturalidade" oninput="up('oNat', this.value)">
+            <select onchange="up('oSex', this.value)">
+                <option value="Masculino">Masculino</option>
+                <option value="Feminino">Feminino</option>
+            </select>
+        </div>
+        <div class="grid-reg">
+            <div>
+                <button class="btn-auth" onclick="gerarProtocolo()">Gerar Código de Autenticação 🔑</button>
+                <input type="text" id="inAuth" placeholder="Código de Validação">
+            </div>
+            <input type="text" placeholder="Nome da Pasta (ex: paulo-victor)" id="inPasta">
+            <input type="text" placeholder="Curso (Ex: TURISMO)" oninput="up('oCurso', this.value)">
+        </div>
+        <div class="grid-reg">
+            <label style="font-size:10px">Frente: <input type="file" onchange="rd(event, 'vF')"></label>
+            <label style="font-size:10px">Verso: <input type="file" onchange="rd(event, 'vV')"></label>
+            <label style="font-size:10px">PDF Diploma: <input type="file" accept="application/pdf" onchange="setPDF(event)"></label>
+        </div>
+        <button class="btn-gerar" onclick="salvarFirebase()">🚀 FINALIZAR E SINCRONIZAR REGISTRO</button>
+    </div>
+
+    <div class="site-header"><div class="logo">Estácio</div></div>
+
+    <div class="container">
+        <div class="aluno-header">
+            <h2 id="oNome">NOME DO ALUNO</h2>
+            <div class="info-row"><span class="label">CPF:</span> <span id="oCPF">000.000.000-00</span></div>
+            <div class="info-row"><span class="label">Data de Nascimento:</span> <span id="oNasc">01/01/2000</span></div>
+            <div class="info-row"><span class="label">Naturalidade:</span> <span id="oNat">CIDADE-UF</span></div>
+            <div class="info-row"><span class="label">RG:</span> <span id="oRG">00.000.000-0</span></div>
+            <div class="info-row"><span class="label">Sexo:</span> <span id="oSex">Masculino</span></div>
+        </div>
+
+        <div class="status-badge">Status do diploma: Ativo</div>
+
+        <div class="diploma-box"><img id="vF" class="img-doc" src=""></div>
+        <div class="diploma-box"><img id="vV" class="img-doc" src=""></div>
+
+        <div style="display:flex; gap:10px;">
+            <button class="btn-y" onclick="baixarXML()">Baixar XML</button>
+            <a id="btnPDF" class="btn-y" href="#" style="background:#ccc; pointer-events:none;">Baixar RVDD</a>
+        </div>
+        <button class="btn-b">Portal de conformidade do XML</button>
+
+        <div class="aba" onclick="tog('a1')">Dados da IES Emissora</div>
+        <div id="a1" class="aba-content">
+            <b>Razão Social:</b> SOCIEDADE DE ENSINO SUPERIOR ESTÁCIO DE SÁ<br>
+            <b>CNPJ:</b> 03.536.667/0001-00<br>
+            <b>Credenciamento:</b> Portaria nº 442, de 11/05/2009
+        </div>
+
+        <div class="aba" onclick="tog('a2')">Dados do Curso</div>
+        <div id="a2" class="aba-content">
+            <b>Curso:</b> <span id="oCurso">TURISMO</span><br>
+            <b>Reconhecimento:</b> Portaria MEC nº 967, de 01/09/2017
+        </div>
+
+        <div class="aba" onclick="tog('a3')">Dados do Registro</div>
+        <div id="a3" class="aba-content">
+            <b>Número de Registro:</b> 27046 | <b>Livro:</b> 1 | <b>Folha:</b> 15195<br>
+            <b>Processo:</b> SRD/6347907/P/2022<br>
+            <b>Data do Registro:</b> 19/09/2022
+        </div>
+
+        <div class="footer-val">
+            Código de Validação: <b id="outAuth">---</b><br>
+            https://consultadiploma.estacio.br/v/<span id="outURL">---</span>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getDatabase, ref, set } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyBWcCa6Ao4tTvdt7EPsVYaWb6npkmsofOo",
+            authDomain: "estacio-valida-c87be.firebaseapp.com",
+            databaseURL: "https://estacio-valida-c87be-default-rtdb.firebaseio.com",
+            projectId: "estacio-valida-c87be",
+            storageBucket: "estacio-valida-c87be.appspot.com",
+            messagingSenderId: "82340597843",
+            appId: "1:82340597843:web:60443d3b2175d31aae76a6"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+
+        window.salvarFirebase = function() {
+            const pasta = document.getElementById('inPasta').value;
+            if(!pasta) return alert("Digite o nome da pasta!");
+
+            set(ref(db, 'alunos/' + pasta), {
+                nome: document.getElementById('oNome').innerText,
+                cpf: document.getElementById('oCPF').innerText,
+                rg: document.getElementById('oRG').innerText,
+                nascimento: document.getElementById('oNasc').innerText,
+                naturalidade: document.getElementById('oNat').innerText,
+                sexo: document.getElementById('oSex').innerText,
+                curso: document.getElementById('oCurso').innerText,
+                auth: document.getElementById('outAuth').innerText,
+                imgF: document.getElementById('vF').src,
+                imgV: document.getElementById('vV').src
+            }).then(() => {
+                alert("DADOS SINCRONIZADOS!");
+                document.getElementById('painelAdmin').style.display = 'none';
+            });
+        };
+    </script>
+
+    <script>
+        function up(id, v) { document.getElementById(id).innerText = v; }
+        function tog(id) {
+            const d = document.getElementById(id);
+            d.style.display = (d.style.display === "block") ? "none" : "block";
+        }
+        function gerarProtocolo() {
+            const id = Math.random().toString(16).slice(2, 12).toUpperCase();
+            const cod = "1270.163." + id;
+            document.getElementById('inAuth').value = cod;
+            document.getElementById('outAuth').innerText = cod;
+            document.getElementById('outURL').innerText = id;
+        }
+        function rd(e, t) {
+            const r = new FileReader();
+            r.onload = () => document.getElementById(t).src = r.result;
+            r.readAsDataURL(e.target.files[0]);
+        }
+        function setPDF(e) {
+            const f = e.target.files[0];
+            const btn = document.getElementById('btnPDF');
+            btn.href = URL.createObjectURL(f);
+            btn.download = f.name;
+            btn.style.background = "#ffb74d";
+            btn.style.pointerEvents = "auto";
+        }
+        function baixarXML() {
+            const nome = document.getElementById('oNome').innerText;
+            const xml = `<?xml version="1.0" encoding="UTF-8"?><diploma><aluno>${nome}</aluno><status>ATIVO</status></diploma>`;
+            const blob = new Blob([xml], {type: 'text/xml'});
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(blob);
+            a.download = "validacao.xml";
+            a.click();
+        }
+    </script>
+</body>
+</html>
