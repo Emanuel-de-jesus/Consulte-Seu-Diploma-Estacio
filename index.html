@@ -15,14 +15,12 @@
         .container { max-width: 850px; margin: 30px auto; background: white; border-radius: 8px; box-shadow: 0 5px 25px rgba(0,0,0,0.1); overflow: hidden; }
         .hero { background: #fafafa; padding: 30px; text-align: center; border-bottom: 1px solid #eee; }
         
-        /* Área de Consulta */
         #search-area { padding: 40px 20px; text-align: center; }
         input { width: 70%; padding: 15px; border: 2px solid #ddd; border-radius: 4px; font-size: 18px; text-align: center; margin-bottom: 15px; }
         input:focus { border-color: var(--blue); outline: none; }
         .btn-search { background: var(--blue); color: white; border: none; padding: 15px 40px; border-radius: 4px; font-weight: bold; cursor: pointer; font-size: 16px; width: 70%; transition: 0.3s; }
         .btn-search:hover { background: #004080; }
 
-        /* Resultado */
         #resultado { display: none; padding: 40px; animation: fadeIn 0.6s ease; }
         .badge-success { background: #d4edda; color: #155724; padding: 20px; border-radius: 6px; text-align: center; font-weight: bold; font-size: 18px; margin-bottom: 30px; border: 1px solid #c3e6cb; }
         
@@ -33,9 +31,9 @@
         .label { font-size: 11px; color: var(--gray); font-weight: bold; text-transform: uppercase; margin-bottom: 3px; }
         .value { font-size: 15px; color: #111; font-weight: 500; }
 
-        /* Efeitos */
         #loader { display: none; margin: 20px 0; text-align: center; }
         .spinner { border: 4px solid #f3f3f3; border-top: 4px solid var(--blue); border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; display: inline-block; }
+        
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
@@ -58,7 +56,7 @@
     </div>
 
     <div id="search-area">
-        <input type="text" id="codInput" placeholder="Digite o Código de Validação ou CPF">
+        <input type="text" id="codInput" placeholder="Digite o CPF (apenas números)">
         <br>
         <button class="btn-search" onclick="validar()">CONSULTAR REGISTRO</button>
         
@@ -102,11 +100,10 @@
 </footer>
 
 <script>
-    // BASE DE DATOS: ADICIONE OS ALUNOS AQUI
+    // BASE DE DADOS COM OS ALUNOS CADASTRADOS
     const baseDeDados = [
         {
-            codigo: "15406",
-            cpfBusca: "01488434255", // CPF Juliano
+            cpfBusca: "01488434255", 
             nome: "JULIANO DE SOUZA ALVES",
             cpfExibicao: "014.884.342-55",
             rg: "6771036 - PC/PA",
@@ -118,20 +115,18 @@
             processo: "SRD/6595739/2025",
             dataRegistro: "12/01/2026"
         },
-        // --- EXEMPLO ALUNO 2 ---
         {
-            codigo: "CODIGO_AQUI",
-            cpfBusca: "CPF_SO_NUMEROS",
-            nome: "NOME DO ALUNO 2",
-            cpfExibicao: "000.000.000-00",
-            rg: "0000000 - PC/PA",
-            natural: "Brasileiro(a) / Cidade - UF",
+            cpfBusca: "07395250265",
+            nome: "RAYANE SOUSA RODRIGUES",
+            cpfExibicao: "073.952.502-65",
+            rg: "9050382 - PC/PA",
+            natural: "Brasileira / Paragominas - PA",
             curso: "Bacharelado em Administração",
             grau: "Bacharel em Administração",
             dataColacao: "20/06/2024",
-            registro: "12345 / Livro 1 / Fls 5555",
-            processo: "SRD/9999999/2024",
-            dataRegistro: "30/06/2024"
+            registro: "659 / Livro 01 / Fls 69373",
+            processo: "2024.0837.9372-ADM",
+            dataRegistro: "20/12/2024"
         }
     ];
 
@@ -148,14 +143,13 @@
         loader.style.display = 'block';
 
         setTimeout(() => {
-            // Busca pelo Código Exato ou pelo CPF sem pontos
-            let aluno = baseDeDados.find(a => a.codigo === rawInput || a.cpfBusca === inputLimpo);
+            // Procura o aluno na lista pelo CPF limpo
+            let aluno = baseDeDados.find(a => a.cpfBusca === inputLimpo);
 
             if (aluno) {
                 loader.style.display = 'none';
                 searchArea.style.display = 'none'; 
                 
-                // Preenche os dados
                 document.getElementById('v-nome').innerText = aluno.nome;
                 document.getElementById('v-cpf').innerText = aluno.cpfExibicao;
                 document.getElementById('v-rg').innerText = aluno.rg;
@@ -172,7 +166,7 @@
                 loader.style.display = 'none';
                 error.style.display = 'block';
             }
-        }, 1200);
+        }, 1500);
     }
 </script>
 </body>
