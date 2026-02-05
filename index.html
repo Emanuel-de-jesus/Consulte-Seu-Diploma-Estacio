@@ -15,7 +15,7 @@
         .container { max-width: 850px; margin: 30px auto; background: white; border-radius: 8px; box-shadow: 0 5px 25px rgba(0,0,0,0.1); overflow: hidden; }
         .hero { background: #fafafa; padding: 30px; text-align: center; border-bottom: 1px solid #eee; }
         
-        /* Área de Busca */
+        /* Área de Consulta */
         #search-area { padding: 40px 20px; text-align: center; }
         input { width: 70%; padding: 15px; border: 2px solid #ddd; border-radius: 4px; font-size: 18px; text-align: center; margin-bottom: 15px; }
         input:focus { border-color: var(--blue); outline: none; }
@@ -33,7 +33,7 @@
         .label { font-size: 11px; color: var(--gray); font-weight: bold; text-transform: uppercase; margin-bottom: 3px; }
         .value { font-size: 15px; color: #111; font-weight: 500; }
 
-        /* Loader */
+        /* Efeitos */
         #loader { display: none; margin: 20px 0; text-align: center; }
         .spinner { border: 4px solid #f3f3f3; border-top: 4px solid var(--blue); border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; display: inline-block; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
@@ -83,13 +83,11 @@
             <div class="field"><span class="label">Curso</span><span class="value" id="v-curso"></span></div>
             <div class="field"><span class="label">Grau Conferido</span><span class="value" id="v-grau"></span></div>
             <div class="field"><span class="label">Data de Colação de Grau</span><span class="value" id="v-data"></span></div>
-            <div class="field"><span class="label">Carga Horária Integralizada</span><span class="value" id="v-carga"></span></div>
 
             <div class="section-title">Dados do Registro (RePública)</div>
             <div class="field"><span class="label">Número de Registro</span><span class="value" id="v-reg"></span></div>
             <div class="field"><span class="label">Processo Administrativo</span><span class="value" id="v-proc"></span></div>
             <div class="field"><span class="label">Data do Registro</span><span class="value" id="v-data-reg"></span></div>
-            <div class="field"><span class="label">Código de Autenticidade</span><span class="value" id="v-auth"></span></div>
         </div>
 
         <div style="text-align: center;">
@@ -99,51 +97,47 @@
 </div>
 
 <footer>
-    Centro Universitário Estácio de Belém do Pará<br>
-    CNPJ: 03.536.667/0001-00 | © 2024 - Secretaria de Registros Acadêmicos
+    Universidade Estácio de Sá | CNPJ: 34.075.739/0001-84<br>
+    © 2026 - Secretaria de Registro de Diplomas
 </footer>
 
 <script>
-    // AQUI VOCÊ CADASTRA OS ALUNOS E SEUS CURSOS DIFERENTES
+    // BASE DE DATOS: ADICIONE OS ALUNOS AQUI
     const baseDeDados = [
         {
-            codigo: "1270.163.5A069320FE",
-            cpfBusca: "07395250265",
-            nome: "RAYANE SOUSA RODRIGUES",
-            cpfExibicao: "073.952.502-65",
-            rg: "9050382 - PC/PA",
-            natural: "Brasileira / Paragominas - PA",
+            codigo: "15406",
+            cpfBusca: "01488434255", // CPF Juliano
+            nome: "JULIANO DE SOUZA ALVES",
+            cpfExibicao: "014.884.342-55",
+            rg: "6771036 - PC/PA",
+            natural: "Brasileiro(a) / Paragominas - PA",
+            curso: "Letras - Libras - Língua Portuguesa",
+            grau: "Licenciado(a) em Letras",
+            dataColacao: "18/12/2025",
+            registro: "15406 / Livro 1 / Fls 13466",
+            processo: "SRD/6595739/2025",
+            dataRegistro: "12/01/2026"
+        },
+        // --- EXEMPLO ALUNO 2 ---
+        {
+            codigo: "CODIGO_AQUI",
+            cpfBusca: "CPF_SO_NUMEROS",
+            nome: "NOME DO ALUNO 2",
+            cpfExibicao: "000.000.000-00",
+            rg: "0000000 - PC/PA",
+            natural: "Brasileiro(a) / Cidade - UF",
             curso: "Bacharelado em Administração",
             grau: "Bacharel em Administração",
-            carga: "3.200 Horas",
             dataColacao: "20/06/2024",
-            registro: "659 / Livro 01 / Fls 69373",
-            processo: "2024.0837.9372-ADM",
-            dataRegistro: "20/12/2024",
-            auth: "1270.163.5A069320FE"
-        },
-        {
-            codigo: "VALIDA.ED.FISICA.01",
-            cpfBusca: "11122233344", // Troque pelo CPF real do aluno 2
-            nome: "MARCOS OLIVEIRA SANTOS",
-            cpfExibicao: "111.222.333-44",
-            rg: "8877665 - PC/PA",
-            natural: "Brasileira / Belém - PA",
-            curso: "Bacharelado em Educação Física",
-            grau: "Bacharel em Educação Física",
-            carga: "3.600 Horas",
-            dataColacao: "20/06/2024",
-            registro: "660 / Livro 01 / Fls 69400",
-            processo: "2024.0837.9400-EDF",
-            dataRegistro: "20/12/2024",
-            auth: "VALIDA.ED.FISICA.01"
+            registro: "12345 / Livro 1 / Fls 5555",
+            processo: "SRD/9999999/2024",
+            dataRegistro: "30/06/2024"
         }
-        // Para adicionar mais, copie de { até }, coloque uma vírgula antes e cole abaixo.
     ];
 
     function validar() {
         const rawInput = document.getElementById('codInput').value.trim();
-        const cpfLimpo = rawInput.replace(/\D/g, ''); 
+        const inputLimpo = rawInput.replace(/\D/g, ''); 
         
         const loader = document.getElementById('loader');
         const searchArea = document.getElementById('search-area');
@@ -154,39 +148,32 @@
         loader.style.display = 'block';
 
         setTimeout(() => {
-            // Busca na lista pelo código ou pelo CPF
-            let aluno = baseDeDados.find(a => a.codigo === rawInput || a.cpfBusca === cpfLimpo);
+            // Busca pelo Código Exato ou pelo CPF sem pontos
+            let aluno = baseDeDados.find(a => a.codigo === rawInput || a.cpfBusca === inputLimpo);
 
             if (aluno) {
                 loader.style.display = 'none';
-                searchArea.style.display = 'none'; // Some o botão de consulta
+                searchArea.style.display = 'none'; 
                 
-                // Preenche os dados dinâmicos do aluno
+                // Preenche os dados
                 document.getElementById('v-nome').innerText = aluno.nome;
                 document.getElementById('v-cpf').innerText = aluno.cpfExibicao;
                 document.getElementById('v-rg').innerText = aluno.rg;
                 document.getElementById('v-natural').innerText = aluno.natural;
-                
-                // Preenche os dados dinâmicos do CURSO
                 document.getElementById('v-curso').innerText = aluno.curso;
                 document.getElementById('v-grau').innerText = aluno.grau;
-                document.getElementById('v-carga').innerText = aluno.carga;
                 document.getElementById('v-data').innerText = aluno.dataColacao;
-                
-                // Registro
                 document.getElementById('v-reg').innerText = aluno.registro;
                 document.getElementById('v-proc').innerText = aluno.processo;
                 document.getElementById('v-data-reg').innerText = aluno.dataRegistro;
-                document.getElementById('v-auth').innerText = aluno.auth;
                 
                 resultado.style.display = 'block';
             } else {
                 loader.style.display = 'none';
                 error.style.display = 'block';
             }
-        }, 1500);
+        }, 1200);
     }
 </script>
-
 </body>
 </html>
