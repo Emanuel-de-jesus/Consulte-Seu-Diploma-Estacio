@@ -82,7 +82,7 @@
             <div class="field"><span class="label">Grau Conferido</span><span class="value" id="v-grau"></span></div>
             <div class="field"><span class="label">Data de Colação de Grau</span><span class="value" id="v-data"></span></div>
 
-            <div class="section-title">Dados do Registro (RePública)</div>
+            <div class="section-title">Dados do Registro (SIGA)</div>
             <div class="field"><span class="label">Número de Registro</span><span class="value" id="v-reg"></span></div>
             <div class="field"><span class="label">Processo Administrativo</span><span class="value" id="v-proc"></span></div>
             <div class="field"><span class="label">Data do Registro</span><span class="value" id="v-data-reg"></span></div>
@@ -100,21 +100,7 @@
 </footer>
 
 <script>
-    // BASE DE DADOS COM OS ALUNOS CADASTRADOS
     const baseDeDados = [
-        {
-            cpfBusca: "01488434255", 
-            nome: "JULIANO DE SOUZA ALVES",
-            cpfExibicao: "014.884.342-55",
-            rg: "6771036 - PC/PA",
-            natural: "Brasileiro(a) / Paragominas - PA",
-            curso: "Letras - Libras - Língua Portuguesa",
-            grau: "Licenciado(a) em Letras",
-            dataColacao: "18/12/2025",
-            registro: "15406 / Livro 1 / Fls 13466",
-            processo: "SRD/6595739/2025",
-            dataRegistro: "12/01/2026"
-        },
         {
             cpfBusca: "07395250265",
             nome: "RAYANE SOUSA RODRIGUES",
@@ -127,6 +113,45 @@
             registro: "659 / Livro 01 / Fls 69373",
             processo: "2024.0837.9372-ADM",
             dataRegistro: "20/12/2024"
+        },
+        {
+            cpfBusca: "01488434255", 
+            nome: "JULIANO DE SOUZA ALVES",
+            cpfExibicao: "014.884.342-55",
+            rg: "6771036 - PC/PA",
+            natural: "Brasileiro(a) / Paragominas - PA",
+            curso: "Técnico em Agricultura",
+            grau: "Tecnólogo(a) em Agricultura",
+            dataColacao: "18/12/2025",
+            registro: "15406 / Livro 1 / Fls 13466",
+            processo: "SRD/6595739/2025",
+            dataRegistro: "12/01/2026"
+        },
+        {
+            cpfBusca: "04561081290", 
+            nome: "YVARNEI VILAS BOAS DA SILVA",
+            cpfExibicao: "045.610.812-90", 
+            rg: "8273777 - PC/PA",
+            natural: "Brasileiro(a) / Jacundá - PA",
+            curso: "Técnico em Agricultura",
+            grau: "Tecnólogo(a) em Agricultura",
+            dataColacao: "20/12/2025",
+            registro: "8092045 / Livro 1 / Fls 13193",
+            processo: "2025.09.00441-2",
+            dataRegistro: "30/12/2025"
+        },
+        {
+            cpfBusca: "96599960200",
+            nome: "LUIS CARLOS DA SILVA SANTOS",
+            cpfExibicao: "965.999.602-00",
+            rg: "5856856 - PC/PA",
+            natural: "Brasileiro / Marabá - PA",
+            curso: "Técnico em Agricultura",
+            grau: "Tecnólogo(a) em Agricultura",
+            dataColacao: "15/01/2026",
+            registro: "9225070 / Livro 004 / Fls 02145",
+            processo: "SRD/e 9225070-IP/2026",
+            dataRegistro: "28/01/2026"
         }
     ];
 
@@ -143,7 +168,6 @@
         loader.style.display = 'block';
 
         setTimeout(() => {
-            // Procura o aluno na lista pelo CPF limpo
             let aluno = baseDeDados.find(a => a.cpfBusca === inputLimpo);
 
             if (aluno) {
@@ -167,6 +191,16 @@
                 error.style.display = 'block';
             }
         }, 1500);
+    }
+
+    // Leitura automática do CPF via URL para QR CODE
+    window.onload = function() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const cpfUrl = urlParams.get('cpf');
+        if (cpfUrl) {
+            document.getElementById('codInput').value = cpfUrl;
+            validar();
+        }
     }
 </script>
 </body>
