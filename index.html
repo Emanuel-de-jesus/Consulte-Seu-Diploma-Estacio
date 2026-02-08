@@ -152,6 +152,32 @@
             registro: "9225070 / Livro 004 / Fls 02145",
             processo: "SRD/e 9225070-IP/2026",
             dataRegistro: "28/01/2026"
+        },
+        {
+            cpfBusca: "76358220266", 
+            nome: "HYAGO ALMEIDA PEREIRA",
+            cpfExibicao: "763.582.202-66",
+            rg: "7456277 - PC/PA",
+            natural: "Brasileiro / Marabá - PA",
+            curso: "Técnico em Agricultura",
+            grau: "Tecnólogo(a) em Agricultura",
+            dataColacao: "18/12/2024",
+            registro: "7635822 / Livro 001 / Fls 09840",
+            processo: "SRD/e 7635822-IP/2024",
+            dataRegistro: "28/01/2025"
+        },
+        {
+            cpfBusca: "44328810288", 
+            nome: "MAX PESSOA DA SILVA",
+            cpfExibicao: "443.288.102-88",
+            rg: "520081 - PC/PA",
+            natural: "Brasileiro / Tailândia - PA",
+            curso: "Técnico em Agricultura",
+            grau: "Tecnólogo(a) em Agricultura",
+            dataColacao: "15/12/2025",
+            registro: "4432881 / Livro 002 / Fls 08810",
+            processo: "SRD/e 4432881-IP/2025",
+            dataRegistro: "20/01/2026"
         }
     ];
 
@@ -193,7 +219,6 @@
         }, 1500);
     }
 
-    // Leitura automática do CPF via URL para QR CODE
     window.onload = function() {
         const urlParams = new URLSearchParams(window.location.search);
         const cpfUrl = urlParams.get('cpf');
