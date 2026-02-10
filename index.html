@@ -7,36 +7,27 @@
     <style>
         :root { --blue: #002d5b; --gold: #f39c12; --green: #27ae60; --gray: #666; }
         body { font-family: 'Segoe UI', Roboto, Arial, sans-serif; background-color: #f4f7f9; margin: 0; color: #333; }
-        
         header { background: var(--blue); color: white; padding: 20px; text-align: center; border-bottom: 5px solid var(--gold); }
         .logo-txt { font-size: 24px; font-weight: bold; letter-spacing: 2px; margin: 0; }
         .sub-txt { font-size: 11px; opacity: 0.8; text-transform: uppercase; }
-
         .container { max-width: 850px; margin: 30px auto; background: white; border-radius: 8px; box-shadow: 0 5px 25px rgba(0,0,0,0.1); overflow: hidden; }
         .hero { background: #fafafa; padding: 30px; text-align: center; border-bottom: 1px solid #eee; }
-        
         #search-area { padding: 40px 20px; text-align: center; }
         input { width: 70%; padding: 15px; border: 2px solid #ddd; border-radius: 4px; font-size: 18px; text-align: center; margin-bottom: 15px; }
         input:focus { border-color: var(--blue); outline: none; }
         .btn-search { background: var(--blue); color: white; border: none; padding: 15px 40px; border-radius: 4px; font-weight: bold; cursor: pointer; font-size: 16px; width: 70%; transition: 0.3s; }
         .btn-search:hover { background: #004080; }
-
         #resultado { display: none; padding: 40px; animation: fadeIn 0.6s ease; }
         .badge-success { background: #d4edda; color: #155724; padding: 20px; border-radius: 6px; text-align: center; font-weight: bold; font-size: 18px; margin-bottom: 30px; border: 1px solid #c3e6cb; }
-        
         .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 25px; }
         .section-title { grid-column: 1 / span 2; border-bottom: 2px solid var(--blue); color: var(--blue); font-size: 14px; font-weight: bold; padding-bottom: 5px; margin-top: 10px; text-transform: uppercase; }
-        
         .field { display: flex; flex-direction: column; }
         .label { font-size: 11px; color: var(--gray); font-weight: bold; text-transform: uppercase; margin-bottom: 3px; }
         .value { font-size: 15px; color: #111; font-weight: 500; }
-
         #loader { display: none; margin: 20px 0; text-align: center; }
         .spinner { border: 4px solid #f3f3f3; border-top: 4px solid var(--blue); border-radius: 50%; width: 40px; height: 40px; animation: spin 1s linear infinite; display: inline-block; }
-        
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-
         footer { text-align: center; padding: 30px; font-size: 12px; color: #999; line-height: 1.6; }
         .btn-new { background: #eee; border: 1px solid #ccc; padding: 12px 30px; cursor: pointer; border-radius: 4px; font-weight: bold; margin-top: 30px; color: #555; }
     </style>
@@ -59,7 +50,6 @@
         <input type="text" id="codInput" placeholder="Digite o CPF (apenas números)">
         <br>
         <button class="btn-search" onclick="validar()">CONSULTAR REGISTRO</button>
-        
         <div id="loader">
             <div class="spinner"></div>
             <p>Conectando ao banco de dados SIGA...</p>
@@ -69,25 +59,21 @@
 
     <div id="resultado">
         <div class="badge-success">✓ DIPLOMA DIGITAL AUTENTICADO E REGISTRADO</div>
-        
         <div class="info-grid">
             <div class="section-title">Dados do Diplomado</div>
             <div class="field"><span class="label">Nome Completo</span><span class="value" id="v-nome"></span></div>
             <div class="field"><span class="label">CPF</span><span class="value" id="v-cpf"></span></div>
             <div class="field"><span class="label">RG / Órgão Expedidor</span><span class="value" id="v-rg"></span></div>
             <div class="field"><span class="label">Nacionalidade / Naturalidade</span><span class="value" id="v-natural"></span></div>
-
             <div class="section-title">Informações do Curso</div>
             <div class="field"><span class="label">Curso</span><span class="value" id="v-curso"></span></div>
             <div class="field"><span class="label">Grau Conferido</span><span class="value" id="v-grau"></span></div>
             <div class="field"><span class="label">Data de Colação de Grau</span><span class="value" id="v-data"></span></div>
-
             <div class="section-title">Dados do Registro (SIGA)</div>
             <div class="field"><span class="label">Número de Registro</span><span class="value" id="v-reg"></span></div>
             <div class="field"><span class="label">Processo Administrativo</span><span class="value" id="v-proc"></span></div>
             <div class="field"><span class="label">Data do Registro</span><span class="value" id="v-data-reg"></span></div>
         </div>
-
         <div style="text-align: center;">
             <button class="btn-new" onclick="location.reload()">🔍 Realizar Nova Consulta</button>
         </div>
@@ -158,13 +144,13 @@
             nome: "HYAGO ALMEIDA PEREIRA",
             cpfExibicao: "554.637.892-15",
             rg: "7456277 - PC/PA",
-            natural: "Brasileiro / Marabá - PA",
+            natural: "Brasileiro / Tailândia - PA",
             curso: "Técnico em Agricultura",
             grau: "Tecnólogo(a) em Agricultura",
-            dataColacao: "18/12/2024",
+            dataColacao: "15/01/2026", 
             registro: "7635822 / Livro 001 / Fls 09840",
-            processo: "SRD/e 7635822-IP/2024",
-            dataRegistro: "28/01/2025"
+            processo: "SRD/e 7635822-IP/2026", 
+            dataRegistro: "28/01/2026" 
         },
         {
             cpfBusca: "97744360249", 
@@ -184,22 +170,17 @@
     function validar() {
         const rawInput = document.getElementById('codInput').value.trim();
         const inputLimpo = rawInput.replace(/\D/g, ''); 
-        
         const loader = document.getElementById('loader');
         const searchArea = document.getElementById('search-area');
         const resultado = document.getElementById('resultado');
         const error = document.getElementById('error');
-
         error.style.display = 'none';
         loader.style.display = 'block';
-
         setTimeout(() => {
             let aluno = baseDeDados.find(a => a.cpfBusca === inputLimpo);
-
             if (aluno) {
                 loader.style.display = 'none';
                 searchArea.style.display = 'none'; 
-                
                 document.getElementById('v-nome').innerText = aluno.nome;
                 document.getElementById('v-cpf').innerText = aluno.cpfExibicao;
                 document.getElementById('v-rg').innerText = aluno.rg;
@@ -210,22 +191,12 @@
                 document.getElementById('v-reg').innerText = aluno.registro;
                 document.getElementById('v-proc').innerText = aluno.processo;
                 document.getElementById('v-data-reg').innerText = aluno.dataRegistro;
-                
                 resultado.style.display = 'block';
             } else {
                 loader.style.display = 'none';
                 error.style.display = 'block';
             }
         }, 1500);
-    }
-
-    window.onload = function() {
-        const urlParams = new URLSearchParams(window.location.search);
-        const cpfUrl = urlParams.get('cpf');
-        if (cpfUrl) {
-            document.getElementById('codInput').value = cpfUrl;
-            validar();
-        }
     }
 </script>
 </body>
